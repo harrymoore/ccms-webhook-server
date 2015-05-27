@@ -11,7 +11,12 @@ var port = process.env.PORT || 8080;        // set our port
 var router = express.Router();              // get an instance of the express Router
 router.get('/', function(req, res) {                        
   console.log('req ' + req.ref);
-  res.status(200).json({ message: 'success' });   
+  res.status(200).json({ message: 'success', endpoints: [
+      "GET /api/taskValidationAlwaysSucceed  Always returns HTTP 200 and { 'message': 'success' }",
+      "GET /api/taskValidationAlwaysFail  Always returns HTTP 400 and { 'message': 'fail' }",
+      "GET /api/taskValidationRandomFail  Randomly succeeds roughly 50% of the time it is called. Fails the other 50%"
+      ]
+   });   
 });
 router.get('/taskValidation', function(req, res) {
   // do something useful here. until then always succeed
