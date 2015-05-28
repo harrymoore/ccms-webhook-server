@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8080;        // set our port
 
 var router = express.Router();              // get an instance of the express Router
-router.get('/', function(req, res) {                        
+router.all('/', function(req, res) {                        
   console.log('req ' + req.ref);
   res.status(200).json({ message: 'success', endpoints: [
       "GET /api/taskValidationAlwaysSucceed  Always returns HTTP 200 and { 'message': 'success' }",
@@ -18,11 +18,11 @@ router.get('/', function(req, res) {
       ]
    });   
 });
-router.get('/taskValidation', function(req, res) {
+router.all('/taskValidation', function(req, res) {
   // do something useful here. until then always succeed
   res.status(200).json({ message: 'success' });   
 });
-router.get('/taskValidationRandomFail', function(req, res) {
+router.all('/taskValidationRandomFail', function(req, res) {
   // randomly fail 50% of the time
   var n = Math.floor(Math.random()*100) < 50;
   if(Math.floor(Math.random()*10) > 5) {
@@ -31,10 +31,10 @@ router.get('/taskValidationRandomFail', function(req, res) {
     res.status(200).json({ message: 'success'});   
   }
 });
-router.get('/taskValidationAlwaysSucceed', function(req, res) {
+router.all('/taskValidationAlwaysSucceed', function(req, res) {
   res.status(200).json({ message: 'success' });   
 });
-router.get('/taskValidationAlwaysFail', function(req, res) {
+router.all('/taskValidationAlwaysFail', function(req, res) {
   res.status(400).json({ message: 'fail' });   
 });
 
