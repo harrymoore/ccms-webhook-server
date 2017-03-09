@@ -29,8 +29,8 @@ var insertDocument = function(db, record, callback) {
     });
 };
 
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var port = process.env.PORT || 8080;        // set our port
 
@@ -50,7 +50,13 @@ router.all('/taskValidation', function(req, res) {
 //    console.log(database);
     // database.collection('webhook').insertOne(req);
 
-    database.collection('webhook').save(req.body, function(err, result) {
+    database.collection('webhook').save({
+        "method": req.method,
+        "url": req.originalUrl,
+        "ip": req.ip,
+        "hostname": req.hostname || "",
+        "body": req.body || {}
+    }, function(err, result) {
         if (err) return console.log(err)
 
         console.log('saved to database')
