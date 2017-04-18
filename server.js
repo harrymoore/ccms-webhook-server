@@ -29,6 +29,19 @@ var insertDocument = function(db, record, callback) {
     });
 };
 
+var recentRequests = function(db, callback) {
+    // Get the documents collection
+    var collection = db.collection('webhook');
+    
+    // Find some documents
+    collection.find().toArray(function(err, docs) {
+        assert.equal(err, null);
+        console.log("Found the following records");
+        console.log(docs)
+        callback(docs);
+    });
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -37,11 +50,14 @@ var port = process.env.PORT || 8080;        // set our port
 var router = express.Router();              // get an instance of the express Router
 router.all('/', function(req, res) {
     console.log('req ' + req.ref);
+    recentRequests(database, function(docs){
         res.status(200).json({ message: 'success', endpoints: [
             "GET /api/taskValidationAlwaysSucceed  Always returns HTTP 200 and { 'message': 'success' }",
             "GET /api/taskValidationAlwaysFail  Always returns HTTP 400 and { 'message': 'fail' }",
             "GET /api/taskValidationRandomFail  Randomly succeeds roughly 50% of the time it is called. Fails the other 50%"
-        ]
+        ],
+        recentRequests: docs
+        });
     });   
 });
 
