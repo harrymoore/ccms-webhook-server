@@ -8,8 +8,8 @@ var bodyParser = require('body-parser');
 var url = 'mongodb://ccms:ccms.15@ds043022.mongolab.com:43022/heroku_app37228477';
 var database;
 
-// var COLLECTION_NAME = "webhook";
-var COLLECTION_NAME = "webhook_capped";
+var COLLECTION_NAME = "webhook";
+// var COLLECTION_NAME = "webhook_capped";
 
 var endpoints = [
         "GET /api  List endpoints and recent requests",
