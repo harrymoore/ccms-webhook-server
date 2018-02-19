@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 var url = 'mongodb://ccms:ccms.15@ds043022.mongolab.com:43022/heroku_app37228477';
 var database;
 
+// var COLLECTION_NAME = "webhook";
+var COLLECTION_NAME = "webhook_capped";
+
 var endpoints = [
         "GET /api  List endpoints and recent requests",
         "POST /api/touch  save the POSTed form data",
@@ -30,7 +33,7 @@ MongoClient.connect(url, function(err, db) {
 });
 
 var insertDocument = function(db, record, callback) {
-    db.collection('webhook').insertOne(record, function(err, result) {
+    db.collection(COLLECTION_NAME).insertOne(record, function(err, result) {
         assert.equal(err, null);
         console.log("Inserted a document into the restaurants collection.");
         callback(result);
@@ -39,10 +42,10 @@ var insertDocument = function(db, record, callback) {
 
 var recentRequests = function(db, callback) {
     // Get the documents collection
-    var collection = db.collection('webhook');
+    var collection = db.collection(COLLECTION_NAME);
     
     // Find some documents
-    collection.find().toArray(function(err, docs) {
+    collection.find().sort({timestamp: -1}).limit(10).toArray(function(err, docs) {
         assert.equal(err, null);
         console.log("Found the following records");
         console.log(docs)
@@ -67,7 +70,7 @@ var help = function(req, res) {
 
 var clear = function(req, res) {
     console.log('req ' + req.ref);
-    var collection = database.collection('webhook');
+    var collection = database.collection(COLLECTION_NAME);
     
     // Find some documents
     collection.deleteMany({},function(err) {
@@ -83,7 +86,8 @@ var router = express.Router();              // get an instance of the express Ro
 router.get('/', help);
 
 router.post('/touch', function(req, res) {
-    database.collection('webhook').save({
+    database.collection(COLLECTION_NAME).save({
+        "timestamp": new Date(),
         "method": req.method,
         "url": req.originalUrl,
         "ip": req.ip,
@@ -112,7 +116,7 @@ router.all('/taskValidation', function(req, res) {
 //    console.log(database);
     // database.collection('webhook').insertOne(req);
 
-    database.collection('webhook').save({
+    database.collection(COLLECTION_NAME).save({
         "method": req.method,
         "url": req.originalUrl,
         "ip": req.ip,
