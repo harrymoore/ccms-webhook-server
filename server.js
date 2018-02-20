@@ -2,10 +2,20 @@
 var assert = require('assert');
 var express = require('express');        // call express
 var app = express();                 // define our app using express
+var Db = require('mongodb').Db;
 var MongoClient = require('mongodb').MongoClient;
+var Server = require('mongodb').Server;
 var bodyParser = require('body-parser');
 
-var url = 'mongodb://ccms:ccms.15@ds043022.mongolab.com:43022/heroku_app37228477';
+// var url = 'mongodb://ccms:ccms.15@ds043022.mongolab.com:43022/heroku_app37228477';
+var default_url = 'mongodb://heroku_app37228477:lr5mei2e13o4cgorhhe2vpj1jp@ds043022.mongolab.com';
+var default_port = 27017;
+var default_name = "heroku_app37228477";
+
+var db_url = process.env['MONGO_URL'] || default_url;
+var db_port = process.env['MONGO_PORT'] || default_port;
+var db_name = process.env['MONGO_NAME'] || default_name;
+console.log("db address: " + db_url + ":" + db_port + "/" + db_name);
 var database;
 
 var COLLECTION_NAME = "webhook";
@@ -25,10 +35,11 @@ process.on('SIGINT', function () {
     process.exit(0);
 });
 
-MongoClient.connect(url, function(err, db) {
+var mongoclient = new MongoClient(new Server(db_url, db_port), {native_parser: true});
+MongoClient.connect(new Server("localhost", 20000), function(err, client) {
     assert.equal(null, err);
     console.log("Connected correctly to server.");
-    database = db;
+    database = client.db(db_name);
     console.log(database);
 });
 
