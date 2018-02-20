@@ -36,7 +36,7 @@ process.on('SIGINT', function () {
 });
 
 var mongoclient = new MongoClient(new Server(db_url, db_port), {native_parser: true});
-MongoClient.connect(new Server("localhost", 20000), function(err, client) {
+MongoClient.connect(new Server(db_url, db_port), function(err, client) {
     assert.equal(null, err);
     console.log("Connected correctly to server.");
     database = client.db(db_name);
