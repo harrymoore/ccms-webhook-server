@@ -12,10 +12,12 @@ var default_url = 'mongodb://heroku_app37228477:lr5mei2e13o4cgorhhe2vpj1jp@ds043
 var default_port = 27017;
 var default_name = "heroku_app37228477";
 
-var db_url = process.env['MONGO_URL'] || default_url;
-var db_port = process.env['MONGO_PORT'] || default_port;
+var db_url = process.env['MONGOLAB_URI'];
+// var db_url = process.env['MONGO_URL'] || default_url;
+// var db_port = process.env['MONGO_PORT'] || default_port;
 var db_name = process.env['MONGO_NAME'] || default_name;
-console.log("db address: " + db_url + ":" + db_port + "/" + db_name);
+// console.log("db address: " + db_url + ":" + db_port + "/" + db_name);
+console.log("db address: " + db_url);
 var database;
 
 var COLLECTION_NAME = "webhook";
@@ -35,8 +37,8 @@ process.on('SIGINT', function () {
     process.exit(0);
 });
 
-var mongoclient = new MongoClient(new Server(db_url, db_port), {native_parser: true});
-MongoClient.connect(new Server(db_url, db_port), function(err, client) {
+// var mongoclient = new MongoClient(new Server(db_url), {native_parser: true});
+MongoClient.connect(db_url, function(err, client) {
     assert.equal(null, err);
     console.log("Connected correctly to server.");
     database = client.db(db_name);
