@@ -12,7 +12,7 @@ var default_url = 'mongodb://heroku_app37228477:lr5mei2e13o4cgorhhe2vpj1jp@ds043
 var default_port = 27017;
 var default_name = "heroku_app37228477";
 
-var db_url = process.env['MONGOLAB_URI'];
+var db_url = process.env['MONGODB_URI'];
 // var db_url = process.env['MONGO_URL'] || default_url;
 // var db_port = process.env['MONGO_PORT'] || default_port;
 var db_name = process.env['MONGO_NAME'] || default_name;
