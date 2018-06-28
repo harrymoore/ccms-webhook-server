@@ -100,10 +100,10 @@ var router = express.Router();              // get an instance of the express Ro
 router.get('/', help);
 
 router.all('/touch', function(req, res) {
-    if (req.headers && req.headers["x-forwarded-for"] && req.headers["x-forwarded-for"] == "54.146.152.2") {
-        res.status(401).json({ message: 'not allowed' });
-        return;
-    }
+    // if (req.headers && req.headers["x-forwarded-for"] && req.headers["x-forwarded-for"] == "54.146.152.2") {
+    //     res.status(401).json({ message: 'not allowed' });
+    //     return;
+    // }
 
     database.collection(COLLECTION_NAME).save({
         "timestamp": new Date(),
