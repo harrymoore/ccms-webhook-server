@@ -26,6 +26,7 @@ var COLLECTION_NAME = "webhook";
 var endpoints = [
         "GET /api  List endpoints and recent requests",
         "POST /api/touch  save the POSTed form data",
+        "GET /api/touch  save the request data",
         "GET /api/taskValidationAlwaysSucceed  Always returns HTTP 200 and { 'message': 'success' }",
         "GET /api/taskValidationAlwaysFail  Always returns HTTP 400 and { 'message': 'fail' }",
         "GET /api/taskValidationRandomFail  Randomly succeeds roughly 50% of the time it is called. Fails the other 50%"
@@ -98,14 +99,16 @@ var clear = function(req, res) {
 var router = express.Router();              // get an instance of the express Router
 router.get('/', help);
 
-router.post('/touch', function(req, res) {
+router.all('/touch', function(req, res) {
     database.collection(COLLECTION_NAME).save({
         "timestamp": new Date(),
         "method": req.method,
         "url": req.originalUrl,
         "ip": req.ip,
         "hostname": req.hostname || "",
-        "body": req.body || {}
+        "body": req.body || {},
+        "params": JSON.parse(JSON.stringify(req.params)) || {},
+        "headers": JSON.parse(JSON.stringify(req.headers)) || {}
     }, function(err, result) {
         if (err) {
             return console.log(err);
