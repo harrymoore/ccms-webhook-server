@@ -100,6 +100,11 @@ var router = express.Router();              // get an instance of the express Ro
 router.get('/', help);
 
 router.all('/touch', function(req, res) {
+    if (req.headers && req.headers["x-forwarded-for"] && req.headers["x-forwarded-for"] == "54.146.152.2") {
+        res.status(401).json({ message: 'not allowed' });
+        return;
+    }
+
     database.collection(COLLECTION_NAME).save({
         "timestamp": new Date(),
         "method": req.method,
@@ -107,14 +112,14 @@ router.all('/touch', function(req, res) {
         "ip": req.ip,
         "hostname": req.hostname || "",
         "body": req.body || {},
-        "params": JSON.parse(JSON.stringify(req.params)) || {},
-        "headers": JSON.parse(JSON.stringify(req.headers)) || {}
+        "params": req.params || {},
+        "headers": req.headers || {}
     }, function(err, result) {
         if (err) {
             return console.log(err);
         }
 
-        console.log('saved to database')
+        console.log('saved to database');
 
 //    MongoClient.connect(url, function(err, db) {
 //      assert.equal(null, err);
