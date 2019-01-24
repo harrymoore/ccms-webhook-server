@@ -13,15 +13,11 @@ var default_port = 27017;
 var default_name = "heroku_app37228477";
 
 var db_url = process.env['MONGODB_URI'];
-// var db_url = process.env['MONGO_URL'] || default_url;
-// var db_port = process.env['MONGO_PORT'] || default_port;
 var db_name = process.env['MONGO_NAME'] || default_name;
-// console.log("db address: " + db_url + ":" + db_port + "/" + db_name);
 console.log("db address: " + db_url);
 var database;
 
 var COLLECTION_NAME = "webhook";
-// var COLLECTION_NAME = "webhook_capped";
 
 var endpoints = [
         "GET /api  List endpoints and recent requests",
@@ -100,10 +96,6 @@ var router = express.Router();              // get an instance of the express Ro
 router.get('/', help);
 
 router.all('/touch', function(req, res) {
-    // if (req.headers && req.headers["x-forwarded-for"] && req.headers["x-forwarded-for"] == "54.146.152.2") {
-    //     res.status(401).json({ message: 'not allowed' });
-    //     return;
-    // }
 
     database.collection(COLLECTION_NAME).save({
         "timestamp": new Date(),
@@ -120,22 +112,11 @@ router.all('/touch', function(req, res) {
         }
 
         console.log('saved to database');
-
-//    MongoClient.connect(url, function(err, db) {
-//      assert.equal(null, err);
-//      insertDocument(db, req, function() {
-//          db.close();
-//      });
-//    });
-
         res.status(200).json({ message: 'success' });
     });
 });
 
 router.all('/taskValidation', function(req, res) {
-  // do something useful here. until then always succeed
-//    console.log(database);
-    // database.collection('webhook').insertOne(req);
 
     database.collection(COLLECTION_NAME).save({
         "method": req.method,
@@ -148,15 +129,7 @@ router.all('/taskValidation', function(req, res) {
             return console.log(err);
         }
 
-        console.log('saved to database')
-
-//    MongoClient.connect(url, function(err, db) {
-//      assert.equal(null, err);
-//      insertDocument(db, req, function() {
-//          db.close();
-//      });
-//    });
-
+        console.log('saved to database');
         res.status(200).json({ message: 'success' });
     });
 });
@@ -182,6 +155,19 @@ router.all('/taskValidationAlwaysFail', function(req, res) {
 app.use('/api', router);
 app.all('/', help);
 app.all('/clear', clear);
+
+app.get('/data', function(req, res) {
+    res.status(200).json([{
+        "value": "rambo",
+        "text": "John Rambo"
+    }, {
+        "value": "norris",
+        "text": "Chuck Norris"
+    }, {
+        "value": "arnold",
+        "text": "Arnold Schwarzenegger"
+    }]); 
+});
 
 // START THE SERVER
 app.listen(port);
