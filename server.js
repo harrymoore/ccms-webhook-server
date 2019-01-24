@@ -156,7 +156,13 @@ app.use('/api', router);
 app.all('/', help);
 app.all('/clear', clear);
 
+app.disable('etag');
 app.get('/data', function(req, res) {
+    res.headers['Access-Control-Allow-Origin'] = '*';
+    res.headers['Access-Control-Allow-Credentials'] = true;
+    res.headers['Access-Control-Allow-Methods'] = 'POST, GET';
+    res.headers['Access-Control-Allow-Headers'] = 'Content-Type';
+
     res.status(200).json([{
         "value": "rambo",
         "text": "John Rambo"
