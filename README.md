@@ -3,4 +3,5 @@ This is an npm enabled nodejs application. To build (resolves node dependencies)
 
   npm install
   
-  npm run
+  mongod --dbpath ./data --smallfiles --port 20000&
+  npm start

@@ -2,6 +2,8 @@
 var assert = require('assert');
 var express = require('express'); // call express
 var app = express(); // define our app using express
+var cors = require('cors')
+app.use(cors());
 var Db = require('mongodb').Db;
 var MongoClient = require('mongodb').MongoClient;
 var Server = require('mongodb').Server;
@@ -182,11 +184,6 @@ app.use(function (req, res, next) {
     next();
 });
 app.get('/data', function (req, res) {
-    // res.headers['Access-Control-Allow-Origin'] = '*';
-    // res.headers['Access-Control-Allow-Credentials'] = true;
-    // res.headers['Access-Control-Allow-Methods'] = 'POST, GET';
-    // res.headers['Access-Control-Allow-Headers'] = 'Content-Type';
-
     res.status(200).json([{
         "value": "rambo",
         "text": "John Rambo"
